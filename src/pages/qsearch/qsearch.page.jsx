@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import '../../App.css'
 import Input from '../../components/input/input.component'
 import Output from '../../components/output/output.component'
 
@@ -32,7 +33,7 @@ class Qsearch extends Component {
 
     render() {
         return (
-            <div>
+            <div className="App">
                 <Input onChangeInput={this.handleInput.bind(this)} />
                 <p>Result Search:</p>
                 {this.state.documents.map((docum, index) => {
