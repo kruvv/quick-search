@@ -1,0 +1,15 @@
+.AppButton {
+  padding: 8px 10px;
+  border: 1px solid orange;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+//This not work
+// &:focus, &:active {
+//   outline: none;
+// }
+
+// &:hover {
+//   background: purple;
+// }

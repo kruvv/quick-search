@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Car from '../../components/Car/Car';
+import '../../App.copy.scss';
 
 
 class Cars extends Component {
@@ -86,7 +87,10 @@ class Cars extends Component {
         
           {/* <button onClick={this.handleChangeTitle.bind(this, 'Changed!')}>Change Title</button> */}
           
-        <button onClick={this.handleToggleCars}>Tooggle cars</button>
+        <button 
+          className={"AppButton"}
+          onClick={this.handleToggleCars}
+          >Tooggle cars</button>
 
         {/* Logic for hide or show cars in jsx sintacsis */}
           {/* { this.state.showCars
