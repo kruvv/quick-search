@@ -1,42 +1,109 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import '../../App.css'
 import Input from '../../components/input/input.component'
 import Output from '../../components/output/output.component'
 import CheckBox from '../../components/checkbox/checkbox.component'
+
+
+const BASE_URL = 'https://jsonplaceholder.typicode.com'
+const POSTS = '/posts'
+const QUERY = '_limit=200'
+
 
 //This component is a quick search form highlighting matching characters.
 class Qsearch extends Component {
 
     state = {
         documents: [
-            {id: 1, data: 'Some text1', date: '2012-09-01'},
-            {id: 2, data: 'Some text2', date: '2014-02-01'},
-            {id: 3, data: 'Some text3', date: '2017-07-21'},
-            {id: 4, data: 'Some text4', date: '2013-12-03'},
-            {id: 5, data: 'Some text5', date: '2018-05-11'},
+            //{userId: 1, id: 2, title: "qui est esse", body: "est rerum tempore vitae↵sequi sint nihil reprehend…aperiam non debitis possimus qui neque nisi nulla"},
+            
         ], 
         shortNameDoc: [
             {name: 'СЛИ', checked: false},
             {name: 'СЛИИ', checked: false},
             {name: 'Ведомость', checked: false},
             {name: 'Приказ', checked: false},
-        ]
+        ], 
+        
     }
-
+    
+    //This method processes the input string.
     handlerInput = (event) => {
-        const eventData = event.target.value
-        if(eventData.length >= 3) {
-            //Здесь делаем запрос к БД
-            console.log('Запрос к БД.....');
-            const shortNameDoc = [...this.state.shortNameDoc] 
-            console.log(shortNameDoc);
+        const inputData = event.target.value        
+        const url = `${BASE_URL}${POSTS}?${QUERY}`
+
+        if(inputData.length >= 2) {
+            //Здесь делаем запрос к БД или источнику данных
+            console.log('Запрос к БД.....')
+
+            //TODO: Для запроса из БД нужно сделать обработку чекбоксов
+            // const shortNameDoc = [...this.state.shortNameDoc]
+            // shortNameDoc.map(name => console.log(name.checked))
             
+           this.fetchDocuments(url)
+
+           setTimeout(() => {
+                this.markSearch(inputData)
+           }, 100)
             
-        }else {
+
+        }else if(inputData.length === 0) {
+            //Clear array
+            let documents = [...this.state.documents]
+            documents = []
+            this.setState({documents})
+        }
+         else {
             //Выдаем сообщение пользователю о недостаточности символов
-            console.log('До запроса', (2 - eventData.length), ' символ');
+            console.log('До запроса', (2 - inputData.length), ' символ')
 
         }
+        
+    }
+    //This method searches for words that have matching character combinations.
+    markSearch(data) {       
+        const val = data.trim()
+        const elasticItems = document.querySelectorAll(".outputSearch")
+            if(val !== "") { 
+                elasticItems.forEach(element => {                    
+                    const elementLength = element.innerText.search(val)
+                        
+                        if(elementLength === -1) {
+                            element.classList.add("hide")
+                            element.innerHTML = element.innerText
+                        }else {
+                            element.classList.remove("hide")
+                            let str = element.innerText
+                            element.innerHTML = this.insertMark(str, elementLength, val.length)
+                        }
+                    })
+                }else {
+                    elasticItems.forEach(element => {
+                        element.classList.remove("hide")
+                        element.innerHTML = element.innerText
+                    })
+                }
+    }
+
+    //This method marks words with matching character combinations.
+    insertMark(stroka, pos, len) {
+        return stroka.slice(0, pos) + 
+            '<mark>' + 
+            stroka.slice(pos, pos + len) + 
+            '</mark>' + 
+            stroka.slice(pos + len)
+    }
+
+    //This method queries the data source.
+    fetchDocuments(urlLink) {       
+        fetch(urlLink)
+        .then(response => response.json())
+        .then(json => {
+            let documents = [...this.state.documents]
+            documents = json
+            this.setState({documents})
+        })
+        .catch(console.error)
         
     }
 
@@ -61,8 +128,9 @@ class Qsearch extends Component {
                             return (
                                 <CheckBox 
                                     key={ind}
-                                    name={shortName.name}
-                                    checked={shortName.checked}
+                                    {...shortName}
+                                    /* name={shortName.name}
+                                    checked={shortName.checked} */
                                     onChangeCheckBox={event => this.handlerCheckBox(event.target.checked, ind)}    
                                 />
                             )
@@ -75,9 +143,11 @@ class Qsearch extends Component {
                             return (
                                 <Output 
                                     key={index}
+                                    {...docum}
+                                    /* userId={docum.userId}
                                     id={docum.id}
-                                    data={docum.data}
-                                    date={docum.date}                                    
+                                    title={docum.title}
+                                    body={docum.body}  */                                   
                                 />
                             )
                         }
@@ -86,10 +156,7 @@ class Qsearch extends Component {
             
             </div>
             
-        );
-            
-        
-        
+        )       
 
     }
 

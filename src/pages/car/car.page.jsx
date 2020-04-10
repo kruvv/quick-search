@@ -68,8 +68,9 @@ class Cars extends Component {
               return (
                 <Car 
                   key={index}
-                  name={car.name}
-                  year={car.year}
+                  {...car}
+                  /* name={car.name}
+                  year={car.year} */
                   /* onChangeTitle={this.handleChangeTitle.bind(this, car.name)} */
                   onChangeName={event => this.handleChangeName(event.target.value, index)}
                   onDelete={this.handleDelete.bind(this, index)}
