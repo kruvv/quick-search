@@ -3,7 +3,7 @@ import React from 'react';
 //This component is a search string.
 export default  props => (
     <div>
-        <h2>Quick Search</h2>
+        <h1>Quick Search</h1>
         <input id="inputSearch" type="text" onChange={props.onChangeInput} />       
     </div>
 ) 

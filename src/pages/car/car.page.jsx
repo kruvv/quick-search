@@ -5,13 +5,15 @@ import '../../App.copy.scss';
 
 class Cars extends Component {
 
+
+
   state = {
     cars:[
-      {name: 'Ford', year: 2010},
+      { year: 2010},
       {name: 'Audi', year: 2019},
       {name: 'BMW', year: 2016},
     ],
-    pageTitle: 'React Components',
+    pageTitle: 'Cars',
     showCars: false 
   }
 
@@ -57,6 +59,8 @@ class Cars extends Component {
   
 
   render() {
+    console.log(this.props)
+
       const divStyle = {
         textAlign: 'center'
       }
@@ -69,6 +73,7 @@ class Cars extends Component {
                 <Car 
                   key={index}
                   {...car}
+                  index={index}
                   /* name={car.name}
                   year={car.year} */
                   /* onChangeTitle={this.handleChangeTitle.bind(this, car.name)} */

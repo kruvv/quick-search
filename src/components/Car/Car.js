@@ -1,44 +1,69 @@
-import React from 'react';
-import './Car.css'
-import Radium from 'radium';
+import React, { Fragment, Component } from 'react';
+import './Car.css';
+//import Radium from 'radium';
+import withClass from '../../hoc/withClass';
+import PropTypes from 'prop-types';
 
-const Car =  props => {
-    const inputClasses = ['input']
+class Car extends Component {
+    constructor(props) {
+        super(props)
 
-    if(props.name !== '') {
+        this.inputRef = React.createRef() //Create local reference
+    }
+    
+    /* Устанавливает фокус в поле инпут в зависимости от индекса элемента */
+    componentDidMount() {
+        if(this.props.index === 0) {
+            //this.inputRef.focus()
+            this.inputRef.current.focus()  //for local reference
+        }
+    }
+    
+    render() {
+        // console.log(this.props);
+        
+        const inputClasses = ['input']
+
+    if(this.props.name !== '') {
         inputClasses.push('green')
     }else {
         inputClasses.push('red')
     }
-    if(props.name.length > 4) {
+    if(this.props.name.length > 4) {
         inputClasses.push('bold')
     }
 
-    const style = {
-        border: '1px solid blue',
-        boxShadow: '0 4px 5px 0 rgba(0, 0, 0, .14)',
-        ':hover': {
-            border: '1px solid orange',
-            boxShadow: '0 4px 15px 0 rgba(0, 0, 0, .25)',
-            cursor: 'pointer'
-        }
-    }
-    
     return (
-    <div className='Car' style={style}>
-        <h3>Car name: {props.name}</h3>
-        <p>Year: <strong>{props.year}</strong></p>
+    <Fragment>
+        <h3>Car name: {this.props.name}</h3>
+        <p>Year: <strong>{this.props.year}</strong></p>
         <input 
+            //ref={(inputRef) => this.inputRef = inputRef} //для работы фокуса на инпуте
+            ref={this.inputRef} //если  в это ручное создание референса в конструкторе
             type="text" 
-            onChange={props.onChangeName} 
-            value={props.name}
+            onChange={this.props.onChangeName} 
+            value={this.props.name}
             className={inputClasses.join(' ')}
         />
         {/* <button onClick={props.onChangeTitle}>Click</button> */}
-        <button onClick={props.onDelete}>Delete</button>
-    </div>
+        <button onClick={this.props.onDelete}>Delete</button>
+    </Fragment>
     )
+    }    
+}
+
+ Car.propTypes = {
+     name: PropTypes.string.isRequired,
+     year: PropTypes.number,
+     index: PropTypes.number,
+     onChangeName: PropTypes.func,
+     onDelete: PropTypes.func,
+ }
+
+ Car.defaultProps = {
+     name: 'Auto'
  }
    
-export default Radium(Car)
+//export default Radium(Car)  //Радиум не дает валидировать PropTypes
+export default withClass(Car, 'Car')
  
